@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session Supply Co. — Facilitator Tools & Resources</title>
+  <link rel="stylesheet" href="site.css">
+  <style>
+    /* ── Hero ────────────────────────────────────────────── */
+    .hero {
+      padding-top: 72px;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 64px 80px 0;
+      padding-left: max(48px, calc((100vw - 1280px) / 2 + 48px));
+    }
+    .hero-eyebrow { margin-bottom: 28px; }
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(52px, 5vw, 76px);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 24px;
+      text-wrap: pretty;
+    }
+    .hero-headline em {
+      font-style: italic;
+      color: var(--forest-dark);
+    }
+    .hero-sub {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--ink-60);
+      max-width: 400px;
+      margin-bottom: 40px;
+    }
+    .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .hero-trust {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--ink-10);
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .hero-trust-item { text-align: left; }
+    .hero-trust-num {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1;
+    }
+    .hero-trust-label { font-size: 11px; color: var(--ink-60); letter-spacing: 0.06em; margin-top: 4px; }
+    .hero-trust-sep { width: 1px; height: 36px; background: var(--ink-10); flex-shrink: 0; }
+
+    .hero-right {
+      background: var(--dusk);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-right-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .hero-mockup {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* floating cards */
+    .hero-badge {
+      position: absolute;
+      background: white;
+      border-radius: 8px;
+      padding: 12px 16px;
+      box-shadow: 0 4px 20px rgba(51,50,48,0.12);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-badge-icon {
+      width: 32px; height: 32px;
+      background: #edf6e5;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .hero-badge-text { font-size: 12px; color: var(--ink-60); }
+    .hero-badge-text strong { display: block; font-size: 13px; font-weight: 600; color: var(--ink); }
+    .badge-a { bottom: 22%; left: -20px; }
+    .badge-b { top: 18%; right: -10px; }
+
+    /* ── Featured band ───────────────────────────────────── */
+    .band {
+      background: var(--forest);
+      padding: 18px 0;
+      overflow: hidden;
+    }
+    .band-track {
+      display: flex;
+      gap: 48px;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .band-item {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(247,247,245,0.8);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .band-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(247,247,245,0.4); flex-shrink: 0; }
+
+    /* ── Section ─────────────────────────────────────────── */
+    .section { padding: 96px 0; }
+    .section-sm { padding: 64px 0; }
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 52px;
+      gap: 24px;
+    }
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 3.5vw, 48px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      max-width: 560px;
+    }
+    .section-header p {
+      font-size: 14px;
+      color: var(--ink-60);
+      max-width: 280px;
+      text-align: right;
+      line-height: 1.65;
+    }
+
+    /* ── Products grid ───────────────────────────────────── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .product-card-featured {
+      grid-column: span 1;
+    }
+
+    /* ── Why section ─────────────────────────────────────── */
+    .why-section {
+      background: var(--ink);
+      padding: 96px 0;
+    }
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .why-left h2 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 3.5vw, 52px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--linen);
+      margin-bottom: 20px;
+    }
+    .why-left p {
+      font-size: 15px;
+      color: rgba(247,247,245,0.55);
+      max-width: 380px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+    .why-right { display: flex; flex-direction: column; gap: 0; }
+    .why-item {
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(247,247,245,0.08);
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .why-item:first-child { border-top: 1px solid rgba(247,247,245,0.08); }
+    .why-num {
+      font-family: var(--font-display);
+      font-size: 13px;
+      color: rgba(247,247,245,0.25);
+      flex-shrink: 0;
+      width: 20px;
+      padding-top: 2px;
+    }
+    .why-item-text h4 {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--linen);
+      margin-bottom: 6px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .why-item-text p {
+      font-size: 13px;
+      color: rgba(247,247,245,0.45);
+      line-height: 1.6;
+    }
+
+    /* ── How it works ────────────────────────────────────── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--ink-10);
+      border: 1px solid var(--ink-10);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .step {
+      background: white;
+      padding: 40px 36px;
+    }
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 300;
+      color: var(--ink-10);
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .step h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .step p {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--ink-60);
+    }
+
+    /* ── Testimonials ────────────────────────────────────── */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .testimonial-card {
+      background: white;
+      border: 1px solid var(--ink-10);
+      border-radius: 6px;
+      padding: 32px 28px;
+    }
+    .testimonial-stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 16px;
+    }
+    .testimonial-stars span {
+      font-size: 13px;
+      color: var(--forest);
+    }
+    .testimonial-quote {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.45;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .testimonial-author {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+    }
+    .testimonial-role { font-size: 11px; color: var(--ink-30); margin-top: 2px; }
+
+    /* ── CTA Banner ──────────────────────────────────────── */
+    .cta-banner {
+      background: var(--forest);
+      padding: 80px 0;
+      text-align: center;
+    }
+    .cta-banner h2 {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 300;
+      color: white;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .cta-banner p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 36px;
+    }
+    .btn-white {
+      background: white;
+      color: var(--forest-dark);
+      padding: 14px 32px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      transition: all var(--fast) var(--ease);
+    }
+    .btn-white:hover { background: var(--linen); }
+
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 100px 20px 48px; }
+      .hero-right { display: none; }
+      .hero-trust { flex-wrap: wrap; gap: 20px; }
+      .section-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .section-header p { text-align: left; max-width: none; }
+      .products-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; gap: 40px; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="assets/logo-full.svg" alt="Session Supply Co.">
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="about.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="openCart()" aria-label="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge" id="cart-badge">0</span>
+      </button>
+      <a href="shop.html" class="btn btn-primary btn-nav-cta">Browse Tools</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="about.html">About</a>
+    <a href="about.html#contact">Contact</a>
+    <a href="shop.html" style="color: var(--forest-dark); font-weight: 600; margin-top: 8px;">Browse Tools →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="eyebrow hero-eyebrow">Structured tools for facilitators</div>
+    <h1 class="hero-headline">
+      Run better sessions.<br><em>Every time.</em>
+    </h1>
+    <p class="hero-sub">
+      Ready-to-use session plans, facilitator toolkits, and downloadable resources designed for peer recovery specialists and group facilitators.
+    </p>
+    <div class="hero-actions">
+      <a href="shop.html" class="btn btn-primary btn-lg">Browse the shop</a>
+      <a href="about.html" class="btn btn-ghost btn-lg">Learn more</a>
+    </div>
+    <div class="hero-trust">
+      <div class="hero-trust-item">
+        <div class="hero-trust-num">40+</div>
+        <div class="hero-trust-label">Session resources</div>
+      </div>
+      <div class="hero-trust-sep"></div>
+      <div class="hero-trust-item">
+        <div class="hero-trust-num">2,800+</div>
+        <div class="hero-trust-label">Facilitators served</div>
+      </div>
+      <div class="hero-trust-sep"></div>
+      <div class="hero-trust-item">
+        <div class="hero-trust-num">Instant</div>
+        <div class="hero-trust-label">Digital delivery</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-right-inner">
+      <!-- Main mockup -->
+      <svg class="hero-mockup" viewBox="0 0 420 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background card stack -->
+        <rect x="30" y="40" width="360" height="280" rx="8" fill="white" opacity="0.4"/>
+        <rect x="15" y="28" width="360" height="280" rx="8" fill="white" opacity="0.6"/>
+        <!-- Main card -->
+        <rect y="16" width="360" height="280" rx="8" fill="white" filter="url(#heroShadow)"/>
+        <defs>
+          <filter id="heroShadow" x="-5%" y="-5%" width="110%" height="120%">
+            <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#333230" flood-opacity="0.1"/>
+          </filter>
+        </defs>
+        <!-- Card header -->
+        <rect y="16" width="360" height="80" rx="8" fill="#86B35E"/>
+        <rect y="80" width="360" height="16" fill="#86B35E"/>
+        <!-- Logo area -->
+        <circle cx="36" cy="56" r="16" fill="rgba(255,255,255,0.2)"/>
+        <!-- Title lines -->
+        <rect x="66" y="44" width="120" height="8" rx="2" fill="rgba(255,255,255,0.9)"/>
+        <rect x="66" y="58" width="80" height="6" rx="2" fill="rgba(255,255,255,0.5)"/>
+        <!-- Tag -->
+        <rect x="270" y="44" width="70" height="22" rx="11" fill="rgba(255,255,255,0.2)"/>
+        <rect x="284" y="51" width="42" height="6" rx="2" fill="rgba(255,255,255,0.8)"/>
+        <!-- Content area -->
+        <rect x="20" y="116" width="200" height="8" rx="2" fill="#E8E8E5"/>
+        <rect x="20" y="132" width="160" height="6" rx="2" fill="#E8E8E5"/>
+        <rect x="20" y="158" width="320" height="1" fill="#E8E8E5"/>
+        <!-- Item rows -->
+        <circle cx="30" cy="178" r="5" fill="#edf6e5"/>
+        <rect x="44" y="174" width="140" height="6" rx="2" fill="#E8E8E5"/>
+        <rect x="44" y="184" width="100" height="4" rx="2" fill="#F0F0EE"/>
+        <circle cx="30" cy="204" r="5" fill="#edf6e5"/>
+        <rect x="44" y="200" width="160" height="6" rx="2" fill="#E8E8E5"/>
+        <rect x="44" y="210" width="120" height="4" rx="2" fill="#F0F0EE"/>
+        <circle cx="30" cy="230" r="5" fill="#edf6e5"/>
+        <rect x="44" y="226" width="130" height="6" rx="2" fill="#E8E8E5"/>
+        <rect x="44" y="236" width="90" height="4" rx="2" fill="#F0F0EE"/>
+        <!-- Price & CTA area -->
+        <rect x="20" y="256" width="320" height="1" fill="#E8E8E5"/>
+        <rect x="20" y="268" width="60" height="12" rx="2" fill="#C8DEAD"/>
+        <rect x="246" y="262" width="94" height="28" rx="4" fill="#86B35E"/>
+        <rect x="268" y="271" width="50" height="6" rx="2" fill="rgba(255,255,255,0.9)"/>
+      </svg>
+
+      <!-- Floating badge A -->
+      <div class="hero-badge badge-a fade-up" style="transition-delay:0.3s">
+        <div class="hero-badge-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#86B35E" stroke-width="1.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="hero-badge-text">
+          <strong>Instant download</strong>
+          PDF + editable formats
+        </div>
+      </div>
+
+      <!-- Floating badge B -->
+      <div class="hero-badge badge-b fade-up" style="transition-delay:0.5s">
+        <div class="hero-badge-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#86B35E" stroke-width="1.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div class="hero-badge-text">
+          <strong>Session-ready</strong>
+          Facilitator-tested
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BAND -->
+<div class="band">
+  <div class="container">
+    <div class="band-track">
+      <div class="band-item">Peer Recovery Specialists</div>
+      <div class="band-dot"></div>
+      <div class="band-item">Group Facilitators</div>
+      <div class="band-dot"></div>
+      <div class="band-item">Program Coordinators</div>
+      <div class="band-dot"></div>
+      <div class="band-item">Instant Digital Delivery</div>
+      <div class="band-dot"></div>
+      <div class="band-item">Facilitator-Tested</div>
+      <div class="band-dot"></div>
+      <div class="band-item">Evidence-Informed</div>
+      <div class="band-dot"></div>
+      <div class="band-item">Ready to Run</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div>
+        <div class="eyebrow" style="margin-bottom: 14px;">Most used resources</div>
+        <h2>Tools built for the work you do.</h2>
+      </div>
+      <p>Every resource is designed around real facilitation challenges — group dynamics, time pressure, emotional range.</p>
+    </div>
+    <div class="products-grid">
+      <!-- Card 1 -->
+      <div class="product-card fade-up" onclick="location.href='product.html?id=1'" style="transition-delay:0.05s">
+        <div class="product-card-img">
+          <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="300" fill="#E4D9D1"/>
+            <rect x="40" y="32" width="220" height="236" rx="6" fill="white" opacity="0.7"/>
+            <rect x="52" y="32" width="220" height="236" rx="6" fill="white" opacity="0.85"/>
+            <rect x="64" y="32" width="220" height="236" rx="6" fill="white"/>
+            <rect x="64" y="32" width="220" height="56" rx="6" fill="#86B35E"/>
+            <rect x="64" y="74" width="220" height="14" fill="#86B35E"/>
+            <rect x="80" y="46" width="90" height="8" rx="2" fill="rgba(255,255,255,0.9)"/>
+            <rect x="80" y="60" width="60" height="5" rx="2" fill="rgba(255,255,255,0.5)"/>
+            <rect x="80" y="106" width="170" height="7" rx="2" fill="#E8E8E5"/>
+            <rect x="80" y="120" width="130" height="5" rx="2" fill="#F0F0EE"/>
+            <circle cx="88" cy="148" r="4" fill="#edf6e5"/>
+            <rect x="100" y="144" width="120" height="5" rx="2" fill="#E8E8E5"/>
+            <circle cx="88" cy="166" r="4" fill="#edf6e5"/>
+            <rect x="100" y="162" width="140" height="5" rx="2" fill="#E8E8E5"/>
+            <circle cx="88" cy="184" r="4" fill="#edf6e5"/>
+            <rect x="100" y="180" width="110" height="5" rx="2" fill="#E8E8E5"/>
+            <!-- botanical -->
+            <g opacity="0.15" transform="translate(290, 120)">
+              <path d="M0 60 C0 30 20 0 20 0 C20 0 40 30 40 60 C40 90 20 110 20 110 C20 110 0 90 0 60Z" stroke="#333230" stroke-width="1" fill="none"/>
+              <path d="M20 0 L20 110" stroke="#333230" stroke-width="0.8"/>
+              <path d="M20 30 C20 30 5 20 0 10" stroke="#333230" stroke-width="0.8" fill="none"/>
+              <path d="M20 30 C20 30 35 20 40 10" stroke="#333230" stroke-width="0.8" fill="none"/>
+            </g>
+          </svg>
+        </div>
+        <div class="product-card-body">
+          <span class="product-card-tag">Session Plan</span>
+          <div class="product-card-title">12-Week Recovery Journey</div>
+          <div class="product-card-desc">A complete facilitation guide for peer support groups — structured, evidence-informed, ready to run.</div>
+          <div class="product-card-footer">
+            <div>
+              <span class="product-price">$49</span>
+              <span class="product-price-old">$65</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); addToCart('12-Week Recovery Journey', 49)">Add to cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="product-card fade-up" onclick="location.href='product.html?id=2'" style="transition-delay:0.1s">
+        <div class="product-card-img">
+          <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="300" fill="#9FC27A" opacity="0.2"/>
+            <rect x="50" y="30" width="140" height="240" rx="6" fill="white" filter="url(#s2)"/>
+            <rect x="210" y="50" width="140" height="220" rx="6" fill="white" filter="url(#s2)"/>
+            <defs><filter id="s2"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-opacity="0.08"/></filter></defs>
+            <rect x="50" y="30" width="140" height="40" rx="6" fill="#9FC27A"/>
+            <rect x="50" y="56" width="140" height="14" fill="#9FC27A"/>
+            <rect x="62" y="42" width="70" height="6" rx="2" fill="rgba(255,255,255,0.9)"/>
+            <rect x="62" y="86" width="110" height="6" rx="2" fill="#E8E8E5"/>
+            <rect x="62" y="100" width="90" height="5" rx="2" fill="#F0F0EE"/>
+            <rect x="62" y="114" width="100" height="5" rx="2" fill="#F0F0EE"/>
+            <rect x="62" y="136" width="110" height="6" rx="2" fill="#E8E8E5"/>
+            <rect x="62" y="150" width="80" height="5" rx="2" fill="#F0F0EE"/>
+            <rect x="210" y="50" width="140" height="40" rx="6" fill="#E4D9D1"/>
+            <rect x="210" y="76" width="140" height="14" fill="#E4D9D1"/>
+            <rect x="222" y="62" width="60" height="5" rx="2" fill="rgba(51,50,48,0.3)"/>
+            <rect x="222" y="106" width="110" height="6" rx="2" fill="#E8E8E5"/>
+            <rect x="222" y="120" width="90" height="5" rx="2" fill="#F0F0EE"/>
+            <rect x="222" y="142" width="100" height="6" rx="2" fill="#E8E8E5"/>
+            <rect x="222" y="156" width="75" height="5" rx="2" fill="#F0F0EE"/>
+          </svg>
+        </div>
+        <div class="product-card-body">
+          <span class="product-card-tag">Toolkit Bundle</span>
+          <div class="product-card-title">Facilitator's Starter Kit</div>
+          <div class="product-card-desc">Check-ins, closings, icebreakers, and group agreements — everything you need for the first session.</div>
+          <div class="product-card-footer">
+            <div>
+              <span class="product-price">$29</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); addToCart('Facilitator\'s Starter Kit', 29)">Add to cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="product-card fade-up" onclick="location.href='product.html?id=3'" style="transition-delay:0.15s">
+        <div class="product-card-img">
+          <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="300" fill="#B4957E" opacity="0.15"/>
+            <rect x="30" y="20" width="340" height="260" rx="6" fill="white"/>
+            <rect x="30" y="20" width="340" height="60" rx="6" fill="#333230"/>
+            <rect x="30" y="66" width="340" height="14" fill="#333230"/>
+            <rect x="48" y="36" width="10" height="10" rx="2" fill="#86B35E"/>
+            <rect x="66" y="37" width="80" height="7" rx="2" fill="rgba(255,255,255,0.8)"/>
+            <rect x="66" y="50" width="50" height="5" rx="2" fill="rgba(255,255,255,0.3)"/>
+            <!-- grid of mini cards -->
+            <rect x="46" y="96" width="90" height="70" rx="4" fill="#F7F7F5" stroke="#E8E8E5" stroke-width="1"/>
+            <rect x="56" y="106" width="50" height="5" rx="2" fill="#C8C8C6"/>
+            <rect x="56" y="116" width="60" height="4" rx="2" fill="#E0E0DE"/>
+            <rect x="56" y="126" width="45" height="4" rx="2" fill="#E0E0DE"/>
+            <rect x="56" y="148" width="40" height="12" rx="3" fill="#86B35E" opacity="0.7"/>
+            <rect x="156" y="96" width="90" height="70" rx="4" fill="#F7F7F5" stroke="#E8E8E5" stroke-width="1"/>
+            <rect x="166" y="106" width="50" height="5" rx="2" fill="#C8C8C6"/>
+            <rect x="166" y="116" width="60" height="4" rx="2" fill="#E0E0DE"/>
+            <rect x="166" y="126" width="45" height="4" rx="2" fill="#E0E0DE"/>
+            <rect x="166" y="148" width="40" height="12" rx="3" fill="#86B35E" opacity="0.7"/>
+            <rect x="266" y="96" width="90" height="70" rx="4" fill="#F7F7F5" stroke="#E8E8E5" stroke-width="1"/>
+            <rect x="276" y="106" width="50" height="5" rx="2" fill="#C8C8C6"/>
+            <rect x="276" y="116" width="60" height="4" rx="2" fill="#E0E0DE"/>
+            <rect x="276" y="126" width="45" height="4" rx="2" fill="#E0E0DE"/>
+            <rect x="276" y="148" width="40" height="12" rx="3" fill="#86B35E" opacity="0.7"/>
+            <rect x="46" y="184" width="310" height="6" rx="2" fill="#E8E8E5"/>
+            <rect x="46" y="198" width="250" height="5" rx="2" fill="#F0F0EE"/>
+          </svg>
+        </div>
+        <div class="product-card-body">
+          <span class="product-card-tag">Complete Bundle</span>
+          <div class="product-card-title">Full Facilitator Toolkit</div>
+          <div class="product-card-desc">The complete resource library. Every plan, template, and guide — for teams and solo practitioners alike.</div>
+          <div class="product-card-footer">
+            <div>
+              <span class="product-price">$79</span>
+              <span class="product-price-old">$120</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); addToCart('Full Facilitator Toolkit', 79)">Add to cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top: 48px;">
+      <a href="shop.html" class="btn btn-outline btn-lg">View all resources</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why-section">
+  <div class="container">
+    <div class="why-grid">
+      <div class="why-left fade-up">
+        <div class="eyebrow" style="color: rgba(247,247,245,0.4); margin-bottom: 24px;">
+          <span style="background: rgba(247,247,245,0.15); width: 20px; height: 1px; display: inline-block; margin-right: 10px;"></span>
+          Why Session Supply Co.
+        </div>
+        <h2>Structure creates space for real work.</h2>
+        <p>When the logistics are handled, you can focus on what matters — the people in the room and the change they're working toward.</p>
+        <a href="about.html" class="btn" style="background: rgba(247,247,245,0.1); color: rgba(247,247,245,0.8); border: 1px solid rgba(247,247,245,0.2); padding: 12px 24px; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 4px; transition: all 150ms ease; display: inline-flex; align-items: center; gap: 8px;">
+          Our approach
+        </a>
+      </div>
+      <div class="why-right">
+        <div class="why-item fade-up">
+          <div class="why-num">01</div>
+          <div class="why-item-text">
+            <h4>Designed for peer recovery contexts</h4>
+            <p>Every resource reflects the unique dynamics of peer support — language, structure, and pacing that fits.</p>
+          </div>
+        </div>
+        <div class="why-item fade-up" style="transition-delay:0.05s">
+          <div class="why-num">02</div>
+          <div class="why-item-text">
+            <h4>Ready to run in under 10 minutes</h4>
+            <p>Download, print or share, and facilitate. No prep hours. No customization required to start.</p>
+          </div>
+        </div>
+        <div class="why-item fade-up" style="transition-delay:0.1s">
+          <div class="why-num">03</div>
+          <div class="why-item-text">
+            <h4>Evidence-informed approach</h4>
+            <p>Grounded in MI, trauma-informed care, and strengths-based facilitation principles.</p>
+          </div>
+        </div>
+        <div class="why-item fade-up" style="transition-delay:0.15s">
+          <div class="why-num">04</div>
+          <div class="why-item-text">
+            <h4>Flexible across group types and sizes</h4>
+            <p>Works for drop-in groups, closed cohorts, one-on-one sessions, and team training.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div>
+        <div class="eyebrow" style="margin-bottom: 14px;">Simple process</div>
+        <h2>Get set up in minutes.</h2>
+      </div>
+    </div>
+    <div class="steps-grid fade-up">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Browse & choose</h3>
+        <p>Filter by session type, group size, or topic. Every resource has a clear description of what's included and who it's for.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Download instantly</h3>
+        <p>After purchase, your files are available immediately — PDF and editable formats included in every download.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Facilitate with confidence</h3>
+        <p>Each plan includes facilitator notes, timing guides, and flexible adaptations for different group needs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section" style="background: white; padding: 80px 0;">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div>
+        <div class="eyebrow" style="margin-bottom: 14px;">From practitioners</div>
+        <h2>Words from the field.</h2>
+      </div>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card fade-up">
+        <div class="testimonial-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="testimonial-quote">"I used to spend hours prepping each session. Now I open a plan, review it once, and I'm ready. It's changed how I prepare."</p>
+        <div class="testimonial-author">Marcus T.</div>
+        <div class="testimonial-role">Peer Recovery Specialist, Ohio</div>
+      </div>
+      <div class="testimonial-card fade-up" style="transition-delay:0.05s">
+        <div class="testimonial-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="testimonial-quote">"The 12-week plan gave our group a real arc. Members noticed the structure — they said it felt like the sessions were going somewhere."</p>
+        <div class="testimonial-author">Diane R.</div>
+        <div class="testimonial-role">Group Facilitator, Community Health Center</div>
+      </div>
+      <div class="testimonial-card fade-up" style="transition-delay:0.1s">
+        <div class="testimonial-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <p class="testimonial-quote">"Ordered the full toolkit for our whole team. It's saved us weeks of curriculum development and our facilitators feel more grounded."</p>
+        <div class="testimonial-author">Priya N.</div>
+        <div class="testimonial-role">Program Coordinator, Midwest Recovery Network</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <div class="container-sm">
+    <div class="eyebrow" style="justify-content: center; color: rgba(255,255,255,0.5); margin-bottom: 24px;">
+      <span style="background: rgba(255,255,255,0.2); width: 20px; height: 1px; display: inline-block; margin-right: 10px;"></span>
+      Start today
+    </div>
+    <h2>Your next session, prepared.</h2>
+    <p>Browse the full library of session plans, toolkits, and resources.</p>
+    <a href="shop.html" class="btn-white btn">Browse the shop</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/logo-dark.svg" alt="Session Supply Co." style="height: 24px; filter: brightness(0) invert(1) opacity(0.7);">
+        <p>Structured session tools for facilitators who need clarity, not guesswork. Designed for peer recovery professionals.</p>
+      </div>
+      <div class="footer-col">
+        <h6>Shop</h6>
+        <ul>
+          <li><a href="shop.html">All resources</a></li>
+          <li><a href="shop.html?filter=session-plans">Session plans</a></li>
+          <li><a href="shop.html?filter=toolkits">Toolkits</a></li>
+          <li><a href="shop.html?filter=bundles">Bundles</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Company</h6>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="about.html#approach">Our approach</a></li>
+          <li><a href="about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h6>Support</h6>
+        <ul>
+          <li><a href="#">Downloads & access</a></li>
+          <li><a href="#">Refund policy</a></li>
+          <li><a href="#">Licensing</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Session Supply Co. All rights reserved.</p>
+      <p>Cultivate Your Focus.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-check">
+    <svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2">
+      <polyline points="1.5 5 4 7.5 8.5 2.5"/>
+    </svg>
+  </div>
+  <span id="toast-msg">Added to cart</span>
+</div>
+
+<script>
+  // Cart state
+  let cartCount = parseInt(localStorage.getItem('ssc-cart') || '0');
+  updateCartBadge();
+
+  function updateCartBadge() {
+    document.getElementById('cart-badge').textContent = cartCount;
+  }
+
+  function addToCart(name, price) {
+    cartCount++;
+    localStorage.setItem('ssc-cart', cartCount);
+    updateCartBadge();
+    showToast(name + ' added to cart');
+  }
+
+  function openCart() {
+    showToast(cartCount + ' item' + (cartCount !== 1 ? 's' : '') + ' in your cart');
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
+  }
+
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // Mobile nav
+  function toggleMobile() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+
+  // Fade-up observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Immediately show hero elements
+  document.querySelectorAll('.hero .fade-up').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 100);
+  });
+</script>
+
+</body>
+</html>

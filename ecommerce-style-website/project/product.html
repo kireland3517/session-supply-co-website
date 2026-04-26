@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — Session Supply Co.</title>
+  <link rel="stylesheet" href="site.css">
+  <style>
+    body { background: white; }
+
+    .breadcrumb {
+      padding-top: 96px;
+      padding-bottom: 20px;
+    }
+    .breadcrumb-inner {
+      max-width: 1280px; margin: 0 auto; padding: 0 48px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--ink-30);
+    }
+    .breadcrumb-inner a { color: var(--ink-60); transition: color var(--fast) var(--ease); }
+    .breadcrumb-inner a:hover { color: var(--ink); }
+    .breadcrumb-sep { color: var(--ink-30); }
+
+    /* ── Product layout ───────────────────────────────────── */
+    .product-layout {
+      max-width: 1280px; margin: 0 auto; padding: 0 48px 96px;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 80px;
+      align-items: start;
+    }
+
+    /* ── Preview area ─────────────────────────────────────── */
+    .preview-area {}
+    .preview-main {
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--dusk);
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .preview-main svg { width: 85%; max-width: 520px; }
+
+    .preview-badge {
+      position: absolute;
+      top: 20px; left: 20px;
+      background: white;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--forest-dark);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .preview-thumbs {
+      display: flex;
+      gap: 10px;
+    }
+    .preview-thumb {
+      width: 72px;
+      height: 56px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border-color var(--fast) var(--ease);
+      flex-shrink: 0;
+      background: var(--dusk);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .preview-thumb.active { border-color: var(--forest); }
+    .preview-thumb svg { width: 90%; height: 90%; }
+
+    /* ── Purchase panel ───────────────────────────────────── */
+    .purchase-panel {
+      position: sticky;
+      top: 92px;
+    }
+
+    .product-tag-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .tag-pill {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: #edf6e5; color: var(--forest-dark);
+      padding: 4px 10px; border-radius: 2px;
+    }
+    .tag-pill.clay { background: #f4ece7; color: #7a5242; }
+
+    .product-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 3vw, 44px);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .product-subtitle {
+      font-size: 15px;
+      color: var(--ink-60);
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+    .product-rating {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 28px;
+    }
+    .stars { display: flex; gap: 2px; }
+    .stars span { font-size: 14px; color: var(--forest); }
+    .rating-count { font-size: 13px; color: var(--ink-60); }
+
+    .price-row {
+      display: flex; align-items: baseline; gap: 12px; margin-bottom: 28px;
+      padding-bottom: 28px; border-bottom: 1px solid var(--ink-10);
+    }
+    .price-main {
+      font-family: var(--font-display);
+      font-size: 48px; font-weight: 400; line-height: 1;
+      color: var(--ink);
+    }
+    .price-was {
+      font-size: 18px; color: var(--ink-30);
+      text-decoration: line-through;
+    }
+    .price-save {
+      font-size: 12px; font-weight: 600;
+      background: #edf6e5; color: var(--forest-dark);
+      padding: 4px 8px; border-radius: 2px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── What's included ──────────────────────────────────── */
+    .includes-list {
+      list-style: none;
+      margin-bottom: 28px;
+    }
+    .includes-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--ink-10);
+      font-size: 14px; color: var(--ink);
+    }
+    .includes-list li:first-child { border-top: 1px solid var(--ink-10); }
+    .inc-icon {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #edf6e5; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; margin-top: 1px;
+    }
+
+    .btn-add-full {
+      width: 100%; justify-content: center;
+      background: var(--forest); color: white;
+      padding: 16px; font-size: 14px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      border-radius: 4px; margin-bottom: 12px;
+      transition: background var(--fast) var(--ease);
+    }
+    .btn-add-full:hover { background: var(--forest-dark); }
+
+    .btn-wishlist {
+      width: 100%; justify-content: center;
+      border: 1px solid var(--ink-10); color: var(--ink-60);
+      padding: 13px; font-size: 13px; font-weight: 500;
+      letter-spacing: 0.04em; border-radius: 4px;
+      margin-bottom: 24px;
+      transition: all var(--fast) var(--ease);
+    }
+    .btn-wishlist:hover { border-color: var(--ink-30); color: var(--ink); background: var(--linen); }
+
+    .trust-badges {
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .trust-badge {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; color: var(--ink-60);
+    }
+    .trust-badge svg { color: var(--forest); }
+
+    /* ── Tabs ─────────────────────────────────────────────── */
+    .product-tabs-section {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 48px 96px;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 80px;
+    }
+    .tabs-nav {
+      display: flex; gap: 0; border-bottom: 1px solid var(--ink-10);
+      margin-bottom: 40px;
+    }
+    .tab-btn {
+      font-family: var(--font-body); font-size: 14px; font-weight: 500;
+      color: var(--ink-60); padding: 14px 24px; border-bottom: 2px solid transparent;
+      margin-bottom: -1px; cursor: pointer;
+      transition: all var(--fast) var(--ease);
+    }
+    .tab-btn:first-child { padding-left: 0; }
+    .tab-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+    .tab-btn:hover:not(.active) { color: var(--ink); }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    .detail-section { margin-bottom: 40px; }
+    .detail-section h4 {
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-60); margin-bottom: 14px;
+    }
+    .detail-section p { font-size: 14px; line-height: 1.75; color: var(--ink-60); }
+    .detail-list { list-style: none; }
+    .detail-list li {
+      font-size: 14px; color: var(--ink-60); line-height: 1.6;
+      padding: 8px 0; border-bottom: 1px solid var(--ink-10);
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .detail-list li::before { content: '—'; color: var(--ink-30); flex-shrink: 0; }
+
+    /* ── Related sidebar ──────────────────────────────────── */
+    .related-sidebar h5 {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink-30); margin-bottom: 20px;
+    }
+    .related-card {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 16px 0; border-bottom: 1px solid var(--ink-10);
+      cursor: pointer;
+      transition: opacity var(--fast) var(--ease);
+    }
+    .related-card:hover { opacity: 0.7; }
+    .related-card-img {
+      width: 60px; height: 48px; border-radius: 4px;
+      overflow: hidden; flex-shrink: 0; background: var(--dusk);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .related-card-body { flex: 1; }
+    .related-card-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .related-card-price { font-size: 13px; color: var(--ink-60); }
+
+    @media (max-width: 1024px) {
+      .product-layout, .product-tabs-section { padding: 0 32px 64px; gap: 48px; }
+    }
+    @media (max-width: 768px) {
+      .product-layout, .product-tabs-section { 
+        padding: 0 20px 48px; grid-template-columns: 1fr; gap: 32px; 
+      }
+      .purchase-panel { position: static; }
+      .breadcrumb-inner { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav scrolled" id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="assets/logo-full.svg" alt="Session Supply Co.">
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="about.html#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="openCart()" aria-label="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-badge" id="cart-badge">0</span>
+      </button>
+    </div>
+    <button class="nav-hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="about.html">About</a>
+    <a href="about.html#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Home</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="shop.html">Shop</a>
+    <span class="breadcrumb-sep">/</span>
+    <span id="breadcrumb-title">12-Week Recovery Journey</span>
+  </div>
+</div>
+
+<!-- PRODUCT -->
+<div class="product-layout">
+
+  <!-- LEFT: Preview -->
+  <div class="preview-area fade-up">
+    <div class="preview-main">
+      <span class="preview-badge">Preview</span>
+      <svg id="main-preview" viewBox="0 0 560 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cover page preview -->
+        <rect width="560" height="420" fill="#E4D9D1"/>
+        <rect x="60" y="30" width="300" height="360" rx="6" fill="white" filter="url(#pd1)"/>
+        <rect x="80" y="20" width="300" height="360" rx="6" fill="white" opacity="0.6"/>
+        <rect x="100" y="10" width="300" height="360" rx="6" fill="white" opacity="0.35"/>
+        <defs><filter id="pd1"><feDropShadow dx="0" dy="4" stdDeviation="16" flood-opacity="0.1"/></filter></defs>
+        <!-- Cover header -->
+        <rect x="60" y="30" width="300" height="90" rx="6" fill="#86B35E"/>
+        <rect x="60" y="108" width="300" height="12" fill="#86B35E"/>
+        <!-- Title -->
+        <rect x="80" y="50" width="160" height="10" rx="3" fill="rgba(255,255,255,0.9)"/>
+        <rect x="80" y="67" width="110" height="7" rx="2" fill="rgba(255,255,255,0.5)"/>
+        <!-- Leaf motif -->
+        <g opacity="0.25" transform="translate(310, 45)">
+          <path d="M0 40 C0 20 14 0 14 0 C14 0 28 20 28 40 C28 60 14 75 14 75 C14 75 0 60 0 40Z" stroke="white" stroke-width="1.2" fill="none"/>
+          <path d="M14 0 L14 75" stroke="white" stroke-width="0.8"/>
+          <path d="M14 20 C14 20 4 13 0 6" stroke="white" stroke-width="0.8" fill="none"/>
+          <path d="M14 20 C14 20 24 13 28 6" stroke="white" stroke-width="0.8" fill="none"/>
+        </g>
+        <!-- Week section list -->
+        <rect x="80" y="138" width="100" height="7" rx="2" fill="#E8E8E5"/>
+        <rect x="80" y="152" width="140" height="5" rx="2" fill="#F0F0EE"/>
+        <!-- Week rows -->
+        <rect x="80" y="176" width="260" height="1" fill="#E8E8E5"/>
+        <rect x="80" y="190" width="60" height="6" rx="2" fill="#C8DEAD" opacity="0.8"/>
+        <rect x="148" y="190" width="140" height="6" rx="2" fill="#E8E8E5"/>
+        <rect x="80" y="208" width="260" height="1" fill="#E8E8E5"/>
+        <rect x="80" y="222" width="60" height="6" rx="2" fill="#C8DEAD" opacity="0.8"/>
+        <rect x="148" y="222" width="120" height="6" rx="2" fill="#E8E8E5"/>
+        <rect x="80" y="240" width="260" height="1" fill="#E8E8E5"/>
+        <rect x="80" y="254" width="60" height="6" rx="2" fill="#C8DEAD" opacity="0.8"/>
+        <rect x="148" y="254" width="160" height="6" rx="2" fill="#E8E8E5"/>
+        <rect x="80" y="272" width="260" height="1" fill="#E8E8E5"/>
+        <rect x="80" y="286" width="60" height="6" rx="2" fill="#C8DEAD" opacity="0.8"/>
+        <rect x="148" y="286" width="100" height="6" rx="2" fill="#E8E8E5"/>
+        <rect x="80" y="304" width="260" height="1" fill="#E8E8E5"/>
+        <!-- Footer area -->
+        <rect x="80" y="330" width="200" height="6" rx="2" fill="#E8E8E5"/>
+        <rect x="80" y="344" width="120" height="5" rx="2" fill="#F0F0EE"/>
+        <rect x="290" y="328" width="56" height="22" rx="3" fill="#86B35E" opacity="0.8"/>
+      </svg>
+    </div>
+
+    <div class="preview-thumbs">
+      <div class="preview-thumb active" onclick="switchPreview(this, 'cover')">
+        <svg viewBox="0 0 70 54" fill="none"><rect width="70" height="54" fill="#E4D9D1"/><rect x="10" y="6" width="50" height="42" rx="3" fill="white"/><rect x="10" y="6" width="50" height="16" rx="3" fill="#86B35E"/><rect x="10" y="19" width="50" height="3" fill="#86B35E"/><rect x="16" y="29" width="30" height="4" rx="1" fill="#E8E8E5"/><rect x="16" y="36" width="22" height="3" rx="1" fill="#F0F0EE"/></svg>
+      </div>
+      <div class="preview-thumb" onclick="switchPreview(this, 'session')">
+        <svg viewBox="0 0 70 54" fill="none"><rect width="70" height="54" fill="rgba(159,194,122,0.2)"/><rect x="8" y="6" width="54" height="42" rx="3" fill="white"/><rect x="8" y="6" width="54" height="14" rx="3" fill="#9FC27A" opacity="0.5"/><rect x="8" y="17" width="54" height="3" fill="#9FC27A" opacity="0.5"/><rect x="14" y="26" width="36" height="4" rx="1" fill="#E8E8E5"/><rect x="14" y="33" width="26" height="3" rx="1" fill="#F0F0EE"/><rect x="14" y="40" width="32" height="3" rx="1" fill="#F0F0EE"/></svg>
+      </div>
+      <div class="preview-thumb" onclick="switchPreview(this, 'facilitator')">
+        <svg viewBox="0 0 70 54" fill="none"><rect width="70" height="54" fill="rgba(51,50,48,0.05)"/><rect x="8" y="6" width="54" height="42" rx="3" fill="white"/><rect x="14" y="12" width="24" height="5" rx="1" fill="#333230" opacity="0.2"/><rect x="14" y="21" width="40" height="3" rx="1" fill="#E8E8E5"/><rect x="14" y="28" width="34" height="3" rx="1" fill="#E8E8E5"/><rect x="14" y="35" width="38" height="3" rx="1" fill="#E8E8E5"/></svg>
+      </div>
+      <div class="preview-thumb" onclick="switchPreview(this, 'worksheet')">
+        <svg viewBox="0 0 70 54" fill="none"><rect width="70" height="54" fill="rgba(228,217,209,0.5)"/><rect x="8" y="6" width="54" height="42" rx="3" fill="white"/><rect x="8" y="6" width="54" height="12" rx="3" fill="#B4957E" opacity="0.4"/><rect x="8" y="15" width="54" height="3" fill="#B4957E" opacity="0.4"/><rect x="14" y="24" width="10" height="10" rx="1" fill="#E8E8E5"/><rect x="28" y="24" width="28" height="3" rx="1" fill="#E8E8E5"/><rect x="28" y="31" width="20" height="3" rx="1" fill="#F0F0EE"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Purchase panel -->
+  <div class="purchase-panel fade-up" style="transition-delay:0.1s">
+    <div class="product-tag-row">
+      <span class="tag-pill" id="product-tag">Session Plan</span>
+      <span class="tag-pill clay">12 weeks</span>
+    </div>
+
+    <h1 class="product-title" id="product-name">12-Week Recovery Journey</h1>
+    <p class="product-subtitle" id="product-desc">A complete facilitation guide for peer support groups — structured, evidence-informed, and ready to run from session one.</p>
+
+    <div class="product-rating">
+      <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <span class="rating-count">4.9 · 84 reviews</span>
+    </div>
+
+    <div class="price-row">
+      <span class="price-main" id="product-price">$49</span>
+      <span class="price-was" id="product-old-price">$65</span>
+      <span class="price-save">Save 25%</span>
+    </div>
+
+    <ul class="includes-list" id="includes-list">
+      <li>
+        <div class="inc-icon">
+          <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="#86B35E" stroke-width="2"><polyline points="1.5 5 4 7.5 8.5 2.5"/></svg>
+        </div>
+        12 session plans (PDF + editable DOCX)
+      </li>
+      <li>
+        <div class="inc-icon">
+          <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="#86B35E" stroke-width="2"><polyline points="1.5 5 4 7.5 8.5 2.5"/></svg>
+        </div>
+        Facilitator notes for each session
+      </li>
+      <li>
+        <div class="inc-icon">
+          <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="#86B35E" stroke-width="2"><polyline points="1.5 5 4 7.5 8.5 2.5"/></svg>
+        </div>
+        Participant worksheets (printable)
+      </li>
+      <li>
+        <div class="inc-icon">
+          <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="#86B35E" stroke-width="2"><polyline points="1.5 5 4 7.5 8.5 2.5"/></svg>
+        </div>
+        Group agreement template
+      </li>
+      <li>
+        <div class="inc-icon">
+          <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="#86B35E" stroke-width="2"><polyline points="1.5 5 4 7.5 8.5 2.5"/></svg>
+        </div>
+        Session timing guide & adaptations
+      </li>
+    </ul>
+
+    <button class="btn btn-add-full" onclick="handleAddToCart()">Add to cart</button>
+    <button class="btn btn-wishlist">Save for later</button>
+
+    <div class="trust-badges">
+      <div class="trust-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Instant download
+      </div>
+      <div class="trust-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.1"/></svg>
+        Lifetime access
+      </div>
+      <div class="trust-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Free updates
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS / DETAILS -->
+<div class="product-tabs-section">
+  <div>
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab(this, 'details')">Details</button>
+      <button class="tab-btn" onclick="switchTab(this, 'approach')">Approach</button>
+      <button class="tab-btn" onclick="switchTab(this, 'reviews')">Reviews (84)</button>
+    </div>
+
+    <div class="tab-pane active" id="tab-details">
+      <div class="detail-section fade-up">
+        <h4>About this resource</h4>
+        <p>The 12-Week Recovery Journey is a structured session-by-session facilitation guide designed for peer recovery specialists running ongoing support groups. Each week builds on the last — moving through group formation, self-reflection, skills development, and integration. The format is clear and consistent so both first-time and experienced facilitators feel grounded from session one.</p>
+      </div>
+      <div class="detail-section fade-up">
+        <h4>What's inside</h4>
+        <ul class="detail-list">
+          <li>12 complete session plans with facilitator scripts and timing</li>
+          <li>Opening and closing ritual suggestions for each session</li>
+          <li>Check-in and check-out prompts for group climate tracking</li>
+          <li>Printable participant worksheets for reflection exercises</li>
+          <li>Adaptation notes for drop-in vs. closed group formats</li>
+          <li>Suggested reading and resources for each week's theme</li>
+        </ul>
+      </div>
+      <div class="detail-section fade-up">
+        <h4>File formats</h4>
+        <ul class="detail-list">
+          <li>PDF (print-ready, A4 and US Letter)</li>
+          <li>DOCX (fully editable for customization)</li>
+          <li>Participant worksheets as separate printable PDFs</li>
+        </ul>
+      </div>
+      <div class="detail-section fade-up">
+        <h4>Best for</h4>
+        <ul class="detail-list">
+          <li>Closed recovery support groups (8–15 participants)</li>
+          <li>Weekly 60–90 minute group sessions</li>
+          <li>New and experienced peer recovery specialists</li>
+          <li>Community health, treatment, and recovery centers</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tab-approach">
+      <div class="detail-section fade-up">
+        <h4>Evidence base</h4>
+        <p>This resource draws on Motivational Interviewing (MI), Trauma-Informed Care principles, and Strengths-Based facilitation. Session themes were developed in collaboration with practicing peer recovery specialists and reviewed for alignment with SAMHSA guidelines.</p>
+      </div>
+      <div class="detail-section fade-up">
+        <h4>Facilitation philosophy</h4>
+        <p>Every session plan is built around the idea that structure creates safety. Clear timing, predictable flow, and low-prep facilitation give practitioners more mental bandwidth to be present with participants — rather than managing logistics in the moment.</p>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tab-reviews">
+      <div style="display: flex; flex-direction: column; gap: 28px;" class="fade-up">
+        <div style="padding: 28px; background: var(--linen); border-radius: 6px;">
+          <div style="display:flex; gap:4px; margin-bottom:10px;">
+            <span style="color:var(--forest); font-size:13px;">★★★★★</span>
+          </div>
+          <p style="font-family: var(--font-display); font-style: italic; font-size:18px; font-weight:300; color:var(--ink); line-height:1.45; margin-bottom:12px;">"The clearest structure I've used in five years of facilitating. My group actually noticed the arc across weeks."</p>
+          <div style="font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-60);">Diane R. <span style="font-weight:400; color:var(--ink-30); margin-left:8px;">Group Facilitator</span></div>
+        </div>
+        <div style="padding: 28px; background: var(--linen); border-radius: 6px;">
+          <div style="display:flex; gap:4px; margin-bottom:10px;">
+            <span style="color:var(--forest); font-size:13px;">★★★★★</span>
+          </div>
+          <p style="font-family: var(--font-display); font-style: italic; font-size:18px; font-weight:300; color:var(--ink); line-height:1.45; margin-bottom:12px;">"Used this with a closed cohort of 10. The participant worksheets were especially well-received — people kept them."</p>
+          <div style="font-size:12px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-60);">Jordan M. <span style="font-weight:400; color:var(--ink-30); margin-left:8px;">Peer Recovery Specialist</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related products -->
+  <div class="related-sidebar fade-up" style="transition-delay:0.1s">
+    <h5>You may also want</h5>
+    <div class="related-card" onclick="location.href='product.html?id=2'">
+      <div class="related-card-img">
+        <svg viewBox="0 0 60 48" fill="none"><rect width="60" height="48" fill="rgba(159,194,122,0.2)"/><rect x="8" y="6" width="44" height="36" rx="3" fill="white"/><rect x="8" y="6" width="44" height="14" rx="3" fill="#9FC27A" opacity="0.6"/><rect x="14" y="27" width="28" height="4" rx="1" fill="#E8E8E5"/><rect x="14" y="34" width="20" height="3" rx="1" fill="#F0F0EE"/></svg>
+      </div>
+      <div class="related-card-body">
+        <div class="related-card-title">Facilitator's Starter Kit</div>
+        <div class="related-card-price">$29</div>
+      </div>
+    </div>
+    <div class="related-card" onclick="location.href='product.html?id=4'">
+      <div class="related-card-img">
+        <svg viewBox="0 0 60 48" fill="none"><rect width="60" height="48" fill="rgba(134,179,94,0.15)"/><rect x="8" y="6" width="44" height="36" rx="3" fill="white"/><rect x="8" y="6" width="44" height="14" rx="3" fill="#86B35E" opacity="0.4"/><rect x="14" y="27" width="28" height="4" rx="1" fill="#E8E8E5"/><rect x="14" y="34" width="20" height="3" rx="1" fill="#F0F0EE"/></svg>
+      </div>
+      <div class="related-card-body">
+        <div class="related-card-title">MI Guide for Facilitators</div>
+        <div class="related-card-price">$29</div>
+      </div>
+    </div>
+    <div class="related-card" onclick="location.href='product.html?id=7'">
+      <div class="related-card-img">
+        <svg viewBox="0 0 60 48" fill="none"><rect width="60" height="48" fill="rgba(159,194,122,0.15)"/><rect x="4" y="10" width="44" height="32" rx="3" fill="white" opacity="0.5"/><rect x="8" y="6" width="44" height="36" rx="3" fill="white"/><rect x="8" y="6" width="44" height="12" rx="3" fill="#86B35E" opacity="0.5"/><rect x="14" y="27" width="28" height="4" rx="1" fill="#E8E8E5"/></svg>
+      </div>
+      <div class="related-card-body">
+        <div class="related-card-title">Peer Recovery Bundle</div>
+        <div class="related-card-price">$59 <span style="text-decoration:line-through; color:var(--ink-30); font-size:12px;">$90</span></div>
+      </div>
+    </div>
+
+    <!-- Guarantee box -->
+    <div style="background: var(--linen); border-radius: 6px; padding: 24px; margin-top: 32px;">
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-60); margin-bottom: 12px;">Our guarantee</div>
+      <p style="font-size: 13px; line-height: 1.65; color: var(--ink-60);">If a resource doesn't work for your context, reach out within 14 days. We'll help you find the right fit or issue a full refund.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <div class="toast-check">
+    <svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1.5 5 4 7.5 8.5 2.5"/></svg>
+  </div>
+  <span id="toast-msg">Added to cart</span>
+</div>
+
+<script>
+  const PRODUCTS = {
+    1: { name: '12-Week Recovery Journey', tag: 'Session Plan', desc: 'A complete facilitation guide for peer support groups — structured, evidence-informed, and ready to run from session one.', price: '$49', old: '$65' },
+    2: { name: "Facilitator's Starter Kit", tag: 'Toolkit', desc: 'Check-ins, closings, icebreakers, and group agreements — everything you need for the first session.', price: '$29', old: null },
+    3: { name: 'Boundaries & Values Workshop', tag: 'Session Plan', desc: 'A single-session deep dive on personal boundaries and values clarification for recovery groups.', price: '$18', old: null },
+    4: { name: 'MI Guide for Facilitators', tag: 'Reference Guide', desc: 'A structured reference for facilitators integrating Motivational Interviewing techniques into peer sessions.', price: '$29', old: null },
+    5: { name: 'Crisis Response Protocol', tag: 'Session Plan', desc: 'A clear, step-by-step facilitation guide for groups navigating crisis and acute distress.', price: '$22', old: null },
+    6: { name: 'Group Check-In Card Deck', tag: 'Toolkit', desc: '52 structured check-in prompts for group openers — printable card format with facilitator notes.', price: '$24', old: null },
+    7: { name: 'Peer Recovery Bundle', tag: 'Bundle', desc: 'The essential recovery facilitation set: 12-week plan, MI guide, and crisis protocol together.', price: '$59', old: '$90' },
+    8: { name: 'New Facilitator Bundle', tag: 'Bundle', desc: "Everything a first-time facilitator needs: starter kit, check-in deck, and values workshop.", price: '$39', old: '$58' },
+    bundle: { name: 'Full Facilitator Toolkit', tag: 'Complete Bundle', desc: 'Every session plan, template, and reference guide — the complete resource library for teams and solo practitioners.', price: '$79', old: '$120' }
+  };
+
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id') || '1';
+  const p = PRODUCTS[id] || PRODUCTS[1];
+
+  document.getElementById('product-name').textContent = p.name;
+  document.getElementById('product-desc').textContent = p.desc;
+  document.getElementById('product-tag').textContent = p.tag;
+  document.getElementById('product-price').textContent = p.price;
+  document.getElementById('breadcrumb-title').textContent = p.name;
+  const oldEl = document.getElementById('product-old-price');
+  if (!p.old) { oldEl.style.display = 'none'; document.querySelector('.price-save').style.display = 'none'; }
+  else { oldEl.textContent = p.old; }
+
+  let currentProduct = p.name;
+  let currentPrice = parseInt(p.price.replace('$',''));
+
+  function handleAddToCart() {
+    addToCart(currentProduct, currentPrice);
+  }
+
+  function switchPreview(el, type) {
+    document.querySelectorAll('.preview-thumb').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function switchTab(el, id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+    document.querySelectorAll('#tab-' + id + ' .fade-up').forEach(el => {
+      setTimeout(() => el.classList.add('visible'), 50);
+    });
+  }
+
+  // Cart
+  let cartCount = parseInt(localStorage.getItem('ssc-cart') || '0');
+  document.getElementById('cart-badge').textContent = cartCount;
+
+  function addToCart(name, price) {
+    cartCount++;
+    localStorage.setItem('ssc-cart', cartCount);
+    document.getElementById('cart-badge').textContent = cartCount;
+    showToast(name + ' added to cart');
+  }
+  function openCart() {
+    showToast(cartCount + ' item' + (cartCount !== 1 ? 's' : '') + ' in your cart');
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+  function toggleMobile() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+
+  // Fade-up observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

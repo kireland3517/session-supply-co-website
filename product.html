@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product — Session Supply Co.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #333230;
+      --ink-60: #6b6a67;
+      --ink-30: rgba(51, 50, 48, 0.28);
+      --ink-10: rgba(51, 50, 48, 0.1);
+      --olive: #9fc27a;
+      --olive-strong: #86b35e;
+      --taupe: #b4957e;
+      --white: #fff;
+      --font-display: "Cormorant Garamond", Georgia, serif;
+      --font-body: "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--white); color: var(--ink); }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1220px; margin: 0 auto; padding: 0 24px; }
+
+    .nav {
+      position: sticky; top: 0; z-index: 30;
+      border-bottom: 1px solid var(--ink-10);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+    }
+    .nav-inner { height: 64px; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-family: var(--font-display); font-size: 28px; line-height: 1; }
+    .nav-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .nav-links { list-style: none; display: flex; gap: 24px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-60); }
+    .nav-links .active { color: var(--ink); font-weight: 600; }
+
+    .cart-btn {
+      position: relative;
+      padding: 8px;
+      color: var(--ink);
+      background: none;
+      border: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cart-btn:hover { color: var(--olive-strong); }
+    .cart-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      background: var(--olive-strong);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 999px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .cart-badge[data-show="1"] { display: flex; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 500;
+      background: var(--ink);
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--olive-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .page { padding: 30px 0 40px; }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 420px;
+      gap: 44px;
+      align-items: start;
+    }
+
+    .preview {
+      aspect-ratio: 4 / 3;
+      border: 1px solid var(--ink-10);
+      border-radius: 8px;
+      background: #f7f7f6;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .preview-sheet {
+      position: absolute; background: #fff; border-radius: 3px; border: 1px solid var(--ink-10);
+      box-shadow: 0 8px 20px rgba(51, 50, 48, 0.08);
+    }
+    .sheet-a { width: 56%; height: 74%; top: 14%; left: 17%; transform: rotate(-14deg); }
+    .sheet-b { width: 42%; height: 60%; top: 8%; left: 38%; transform: rotate(10deg); }
+    .sheet-c { width: 48%; height: 64%; top: 18%; left: 46%; transform: rotate(18deg); }
+    .sheet-band { height: 18%; background: #dde6df; border-bottom: 1px solid var(--ink-10); }
+    .sheet-band.strong { background: var(--olive-strong); }
+
+    .benefits { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .benefit {
+      border: 1px solid var(--ink-10); border-radius: 6px; background: #faf9f8;
+      padding: 12px 10px; text-align: center; font-size: 12px; color: var(--ink-60);
+    }
+
+    .eyebrow {
+      color: var(--olive-strong); text-transform: uppercase; letter-spacing: 0.09em;
+      font-size: 11px; font-weight: 700; margin-bottom: 10px;
+    }
+    h1 {
+      font-family: var(--font-display); font-size: clamp(44px, 4vw, 58px);
+      line-height: 0.95; letter-spacing: -0.01em; margin-bottom: 10px;
+    }
+    .rating { color: var(--ink-60); font-size: 12px; margin-bottom: 16px; }
+    .rating .stars { color: var(--taupe); margin-right: 8px; letter-spacing: 1px; }
+    .desc { color: var(--ink-60); font-size: 16px; line-height: 1.5; margin-bottom: 16px; max-width: 44ch; }
+
+    .meta { display: flex; gap: 18px; font-size: 13px; color: var(--ink-60); margin-bottom: 16px; }
+    hr { border: 0; border-top: 1px solid var(--ink-10); margin: 14px 0 18px; }
+
+    .section-title {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--ink); margin-bottom: 10px; font-weight: 700;
+    }
+    .checklist { list-style: none; margin-bottom: 18px; }
+    .checklist li { font-size: 15px; color: var(--ink-60); padding: 4px 0; display: flex; align-items: flex-start; gap: 9px; }
+    .check {
+      margin-top: 5px; width: 12px; height: 12px; border-radius: 50%;
+      border: 1.4px solid var(--olive-strong); flex-shrink: 0;
+    }
+
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .chip {
+      border-radius: 999px; padding: 4px 10px; background: #ddeae2; color: #1f4c3f;
+      font-size: 12px;
+    }
+
+    .buy-box {
+      border: 1px solid var(--ink-10); border-radius: 8px; background: #f9f8f6;
+      padding: 18px 16px; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    .price-wrap .price { font-family: var(--font-display); font-size: 40px; line-height: 1; }
+    .price-wrap .sub { color: var(--ink-60); font-size: 13px; }
+    .cta {
+      border: 0; background: #0d4f32; color: #fff; padding: 13px 22px;
+      border-radius: 6px; font-weight: 700; font-size: 14px;
+    }
+
+    .sub-layout {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 32px;
+      align-items: start;
+    }
+    .faq-box {
+      border: 1px solid var(--ink-10);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+      margin-bottom: 10px;
+    }
+    .faq-btn {
+      width: 100%;
+      text-align: left;
+      border: 0;
+      background: #fff;
+      cursor: pointer;
+      padding: 14px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-body {
+      border-top: 1px solid var(--ink-10);
+      padding: 12px 16px 14px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--ink-60);
+      display: none;
+    }
+    .faq-box.open .faq-body { display: block; }
+
+    .related h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-30);
+      margin-bottom: 12px;
+    }
+    .related-card {
+      border: 1px solid var(--ink-10);
+      border-radius: 10px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+      background: #fff;
+      text-decoration: none;
+    }
+    .related-thumb {
+      border-radius: 8px;
+      border: 1px solid var(--ink-10);
+      background: linear-gradient(150deg, #ece8e0, #dde5da);
+    }
+    .related-name {
+      font-size: 24px;
+      font-family: var(--font-display);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .related-meta { font-size: 12px; color: var(--ink-60); }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; gap: 24px; }
+      .benefits { grid-template-columns: 1fr; }
+      .sub-layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      .buy-box { flex-direction: column; align-items: stretch; }
+      .cta { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">Session Supply Co.</a>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="product.html" class="active">Product</a></li>
+        </ul>
+        <button type="button" class="cart-btn" id="cart-btn" aria-label="Open cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span class="cart-badge" id="cart-badge" aria-live="polite">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <div class="container layout">
+      <section>
+        <div class="preview">
+          <div class="preview-sheet sheet-a">
+            <div class="sheet-band strong"></div>
+          </div>
+          <div class="preview-sheet sheet-b">
+            <div class="sheet-band"></div>
+          </div>
+          <div class="preview-sheet sheet-c">
+            <div class="sheet-band"></div>
+          </div>
+        </div>
+        <div class="benefits">
+          <div class="benefit">Instant Download</div>
+          <div class="benefit">Secure Purchase</div>
+          <div class="benefit">Free Updates</div>
+        </div>
+      </section>
+
+      <section>
+        <div class="eyebrow">Session Plans</div>
+        <h1 id="product-title">Session Plan Starter Pack</h1>
+        <div class="rating"><span class="stars">★★★★★</span>4.9 · 48 reviews</div>
+        <p class="desc">12 ready-to-use peer support session plans covering core topics: goal setting, coping skills, boundaries, and self-advocacy.</p>
+        <div class="meta">
+          <span>48 pages</span>
+          <span>PDF + DOCX</span>
+        </div>
+
+        <hr />
+        <h2 class="section-title">What's Included</h2>
+        <ul class="checklist">
+          <li><span class="check"></span>12 fully structured session plans (PDF)</li>
+          <li><span class="check"></span>Discussion prompt cards for each session</li>
+          <li><span class="check"></span>Participant handout for every topic</li>
+          <li><span class="check"></span>Facilitator notes and timing guides</li>
+          <li><span class="check"></span>Editable Word version included</li>
+        </ul>
+
+        <h2 class="section-title">Topics Covered</h2>
+        <div class="chips">
+          <span class="chip">Goal Setting</span>
+          <span class="chip">Coping Skills</span>
+          <span class="chip">Boundaries</span>
+          <span class="chip">Self-Advocacy</span>
+          <span class="chip">Relapse Prevention</span>
+          <span class="chip">Building Support Networks</span>
+        </div>
+
+        <div class="buy-box">
+          <div class="price-wrap">
+            <div class="price">$24</div>
+            <div class="sub">One-time purchase · Instant access</div>
+          </div>
+          <button type="button" class="cta" id="add-to-cart">Add to Cart</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="container sub-layout">
+      <section>
+        <h2 class="section-title" style="margin-bottom:12px;">Frequently Asked Questions</h2>
+        <article class="faq-box open">
+          <button class="faq-btn" type="button">What format are the files?<span>−</span></button>
+          <div class="faq-body">All products are delivered as PDF files. Editable Word (.docx) versions are included where noted.</div>
+        </article>
+        <article class="faq-box">
+          <button class="faq-btn" type="button">How do I receive my download?<span>+</span></button>
+          <div class="faq-body">After checkout you get an instant download link and a backup email with your files.</div>
+        </article>
+        <article class="faq-box">
+          <button class="faq-btn" type="button">Can I print these materials?<span>+</span></button>
+          <div class="faq-body">Yes. Materials are formatted for standard US Letter and are designed for print and digital use.</div>
+        </article>
+        <article class="faq-box">
+          <button class="faq-btn" type="button">Are these evidence-informed?<span>+</span></button>
+          <div class="faq-body">Yes. Resources are grounded in peer support best practices, trauma-informed care, and motivational interviewing principles.</div>
+        </article>
+      </section>
+
+      <aside class="related">
+        <h3>You might also like</h3>
+        <a class="related-card" href="shop.html">
+          <div class="related-thumb"></div>
+          <div>
+            <div class="related-name">Facilitator's Starter Kit</div>
+            <div class="related-meta">$29 · Toolkit</div>
+          </div>
+        </a>
+        <a class="related-card" href="shop.html">
+          <div class="related-thumb" style="background:linear-gradient(150deg,#ded2c4,#9f7e62);"></div>
+          <div>
+            <div class="related-name">MI Guide for Facilitators</div>
+            <div class="related-meta">$29 · Quick Guide</div>
+          </div>
+        </a>
+        <a class="related-card" href="shop.html">
+          <div class="related-thumb" style="background:linear-gradient(150deg,#edecee,#d0ccd9);"></div>
+          <div>
+            <div class="related-name">Peer Recovery Bundle</div>
+            <div class="related-meta">$59 · Bundle</div>
+          </div>
+        </a>
+      </aside>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-check" aria-hidden="true">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1.5 5 4 7.5 8.5 2.5"/></svg>
+    </span>
+    <span id="toast-msg">Added to cart</span>
+  </div>
+
+  <script>
+    const SSC_KEY = "ssc-cart";
+    function getCartCount() {
+      const n = parseInt(localStorage.getItem(SSC_KEY) || "0", 10);
+      return Number.isFinite(n) && n >= 0 ? n : 0;
+    }
+    function setCartCount(n) {
+      localStorage.setItem(SSC_KEY, String(Math.max(0, n)));
+    }
+    function updateCartBadge() {
+      const badge = document.getElementById("cart-badge");
+      if (!badge) return;
+      const c = getCartCount();
+      badge.textContent = c > 99 ? "99+" : String(c);
+      badge.dataset.show = c > 0 ? "1" : "0";
+    }
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      const msgEl = document.getElementById("toast-msg");
+      if (!toast || !msgEl) return;
+      msgEl.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(window.__sscToast);
+      window.__sscToast = setTimeout(() => toast.classList.remove("show"), 2800);
+    }
+    document.getElementById("cart-btn")?.addEventListener("click", () => {
+      const c = getCartCount();
+      showToast(c + " item" + (c === 1 ? "" : "s") + " in your cart");
+    });
+    document.getElementById("add-to-cart")?.addEventListener("click", () => {
+      const title = document.getElementById("product-title")?.textContent?.trim() || "Item";
+      setCartCount(getCartCount() + 1);
+      updateCartBadge();
+      showToast(title + " added to cart");
+    });
+    updateCartBadge();
+
+    const faqButtons = document.querySelectorAll(".faq-btn");
+    faqButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const box = btn.closest(".faq-box");
+        const isOpen = box.classList.contains("open");
+        document.querySelectorAll(".faq-box").forEach((el) => {
+          el.classList.remove("open");
+          el.querySelector(".faq-btn span").textContent = "+";
+        });
+        if (!isOpen) {
+          box.classList.add("open");
+          btn.querySelector("span").textContent = "−";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 160" fill="none">
+  
+  <text x="160" y="52" text-anchor="middle" font-family="&#39;Cormorant Garamond&#39;, Georgia, serif" font-size="36" font-weight="400" fill="#86B35E" letter-spacing="-0.5">Session Supply Co.</text>
+  
+  <g transform="translate(160,78) scale(0.9)">
+    <path d="M0,-28 C8,-20 14,-8 14,4 C14,16 8,24 0,30 C-8,24 -14,16 -14,4 C-14,-8 -8,-20 0,-28 Z" stroke="#86B35E" stroke-width="1" fill="none"></path>
+    <line x1="0" y1="-28" x2="0" y2="30" stroke="#86B35E" stroke-width="0.8"></line>
+    <path d="M0,0 C4,-4 10,-4 14,4" stroke="#86B35E" stroke-width="0.7" fill="none"></path>
+    <path d="M0,-8 C-4,-12 -10,-10 -14,4" stroke="#86B35E" stroke-width="0.7" fill="none"></path>
+    <path d="M0,8 C4,4 10,6 14,4" stroke="#86B35E" stroke-width="0.7" fill="none"></path>
+  </g>
+  
+  <text x="160" y="138" text-anchor="middle" font-family="&#39;Cormorant Garamond&#39;, Georgia, serif" font-size="13" font-weight="300" fill="#86B35E" letter-spacing="3">Cultivate Your Focus.</text>
+</svg>
