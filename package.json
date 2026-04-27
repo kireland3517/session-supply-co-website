@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@builder.io/react": "latest",
+    "@puckeditor/core": "latest",
     "react": "latest",
     "react-dom": "latest"
   },
